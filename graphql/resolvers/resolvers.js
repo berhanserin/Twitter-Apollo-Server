@@ -53,12 +53,14 @@ module.exports = {
       }
     },
     getComment: async (parent, args) => {
+      console.log("sadasd");
       const { commentId } = args;
       return Commet.findById(commentId).populate("kullanici").populate("post");
     },
   },
   Mutation: {
     uyeOl: async (parent, args) => {
+      console.log("asdync");
       let hatalar = {};
       let { kullaniciAd, email, parola, parolaKontrol } = args;
       try {
@@ -88,11 +90,17 @@ module.exports = {
           throw hatalar;
         }
         parola = await bcryptjs.hash(parola, 3);
-        return Kullanici.create({
+        let index = await Kullanici.estimatedDocumentCount().then((i) => {
+          return i;
+        });
+
+        Kullanici.create({
           kullaniciAd,
           email,
           parola,
+          index,
         });
+        return "Kayıt Başarılı";
       } catch (error) {
         throw new UserInputError("Hatalı Erişim", { hatalar: error });
       }

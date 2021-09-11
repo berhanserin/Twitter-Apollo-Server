@@ -6,6 +6,7 @@ module.exports = gql`
     kullaniciAd: String!
     email: String!
     token: String!
+    index: Int!
   }
 
   type Comment {
@@ -36,9 +37,8 @@ module.exports = gql`
       email: String!
       parola: String!
       parolaKontrol: String!
-    ): Kullanici!
+    ): String!
     addPost(KullaniciId: ID!, body: String!): Post!
     addComment(KullaniciId: ID!, body: String!, postId: ID!): Comment!
   }
 `;
- 
