@@ -17,6 +17,14 @@ module.exports = {
         throw new Error(error);
       }
     },
+
+    getComment: async (parent, args) => {
+      console.log("sadasd");
+      const { commentId } = args;
+      return Commet.findById(commentId).populate("kullanici").populate("post");
+    },
+  },
+  Mutation: {
     girisYap: async (parent, args) => {
       const { kullaniciAd, parola } = args;
       let hatalar = {};
@@ -24,8 +32,11 @@ module.exports = {
         if (kullaniciAd.trim() === "")
           hatalar.kullaniciAd = "Kullanıcı adı boş geçilemez.";
         if (parola.trim() === "") hatalar.parola = "Parola boş geçilemez.";
-        const kullanici = await Kullanici.findOne({ kullaniciAd: kullaniciAd });
-        const { id } = kullanici;
+        let kullanici = await Kullanici.findOne({ kullaniciAd: kullaniciAd });
+
+        if (!kullanici) {
+          kullanici = await Kullanici.findOne({ email: kullaniciAd });
+        }
         if (!kullanici) {
           hatalar.kullanici = "Kullanıcı bulunamadı.";
           throw new UserInputError("Kullanıcı Bulunamadı", { hatalar });
@@ -42,6 +53,7 @@ module.exports = {
           throw new AuthenticationError("Parola doğru değil", { hatalar });
         }
 
+        const { id } = kullanici;
         const token = jwt.sign({ kullaniciAd, id }, JWT_Key, {
           expiresIn: 600 * 600,
         });
@@ -52,15 +64,7 @@ module.exports = {
         throw error;
       }
     },
-    getComment: async (parent, args) => {
-      console.log("sadasd");
-      const { commentId } = args;
-      return Commet.findById(commentId).populate("kullanici").populate("post");
-    },
-  },
-  Mutation: {
     uyeOl: async (parent, args) => {
-      console.log("asdync");
       let hatalar = {};
       let { kullaniciAd, email, parola, parolaKontrol } = args;
       try {
@@ -108,11 +112,13 @@ module.exports = {
     addPost: async (parent, args) => {
       try {
         const { KullaniciId, body } = args;
-        return Post.create({
+        console.log(args);
+        Post.create({
           kullanici: KullaniciId,
           body: body,
           yorumSayisi: 0,
         });
+        return "Post Paylaşıldı";
       } catch (error) {
         console.log(error);
       }

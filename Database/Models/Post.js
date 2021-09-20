@@ -7,7 +7,7 @@ const postSchema = new Schema({
   olusturulmaTarihi: {
     type: Date,
     default: () => {
-      return new Date();
+      return new Date().toISOString();
     },
   },
 });

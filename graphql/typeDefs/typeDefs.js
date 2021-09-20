@@ -17,17 +17,15 @@ module.exports = gql`
   }
 
   type Post {
+    id: ID!
     kullanici: Kullanici!
-    comment: Comment!
     body: String!
     olusturulmaTarihi: String!
-    yorumSayisi: Int!
-    begeniSayisi: Int!
+    index: Int!
   }
 
   type Query {
     getPost: [Post]!
-    girisYap(kullaniciAd: String!, parola: String!): Kullanici!
     getComment(commentId: ID!): Comment!
   }
 
@@ -38,7 +36,8 @@ module.exports = gql`
       parola: String!
       parolaKontrol: String!
     ): String!
-    addPost(KullaniciId: ID!, body: String!): Post!
+    girisYap(kullaniciAd: String!, parola: String!): Kullanici!
+    addPost(KullaniciId: ID!, body: String!): String!
     addComment(KullaniciId: ID!, body: String!, postId: ID!): Comment!
   }
 `;
