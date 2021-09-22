@@ -17,7 +17,6 @@ module.exports = {
         throw new Error(error);
       }
     },
-
     getComment: async (parent, args) => {
       console.log("sadasd");
       const { commentId } = args;
@@ -146,6 +145,28 @@ module.exports = {
           kullanici: KullaniciId,
           post: postId,
         });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    updatePost: async (parent, args) => {
+      try {
+        const { postId, body } = args;
+        console.log(args);
+
+        const post = Post.findById(postId, (err, data) => {
+          if (err) {
+            throw new UserInputError("Böyle bir kullanıcı yok.", { err });
+          }
+          data.body = body;
+          data.save((err) => {
+            if (err) {
+              throw new UserInputError("Güncelleme Yapılamadı.", { err });
+            }
+          });
+        });
+
+        return "Updated";
       } catch (error) {
         console.log(error);
       }

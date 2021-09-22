@@ -39,5 +39,6 @@ module.exports = gql`
     girisYap(kullaniciAd: String!, parola: String!): Kullanici!
     addPost(KullaniciId: ID!, body: String!): String!
     addComment(KullaniciId: ID!, body: String!, postId: ID!): Comment!
+    updatePost(postId: ID!, body: String!): String!
   }
 `;
